@@ -1,0 +1,104 @@
+DATASET F1:
+
+1.
+SELECT DISTINCT
+    d.forename, d.surname
+FROM
+    drivers d
+JOIN results r ON d.driverId = r.driverId
+WHERE
+    r.position = 1;					
+
+2.
+SELECT
+    ra.name AS race_name,
+    ra.year,
+    CONCAT(d.forename, ' ', d.surname) AS driver_name,
+    r.fastestLapTime,
+    r.fastestLapSpeed
+FROM
+    races ra
+JOIN results r ON ra.raceId = r.raceId
+JOIN drivers d ON r.driverId = d.driverId;
+
+3. 
+SELECT
+    d.driverRef,
+    ra.year,
+    AVG(r.points) AS average_points
+FROM
+    drivers d
+JOIN results r ON d.driverId = r.driverId
+JOIN races ra ON r.raceId = ra.raceId
+GROUP BY d.driverRef, ra.year;
+
+
+1.Ottieni l'elenco dei nomi completi dei piloti che hanno ottenuto almeno una vittoria:
+
+2.Ottieni i dettagli delle gare, mostrando il pilota che ha ottenuto il giro più veloce e la sua velocità in ogni gara:
+
+3.Ottieni la media dei punti ottenuti da ciascun pilota in ciascun anno
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+DATASET CITIES:
+
+1.
+SELECT c.name AS country_name, c.capital
+FROM countries c
+WHERE c.region = 'Europe';
+				
+2.
+SELECT c.name AS country_name, c.capital
+FROM countries c
+WHERE c.region = 'Europe'
+  AND EXISTS (
+    SELECT 1
+    FROM cities ci
+    WHERE ci.country_id = c.id
+      AND ci.longitude < '0'
+  );
+
+3.
+SELECT cities.name AS city_name, states.name AS state_name,
+       countries.name AS country_name, countries.currency
+FROM cities
+JOIN states ON cities.state_id = states.id
+JOIN countries ON states.country_id = countries.id;
+
+
+1.Restituisci il nome e la capitale dei paesi che si trovano nella regione "Europe"
+
+2.Restituisci il nome e la capitale dei paesi nell'Europa che hanno almeno una città con longitudine negativa
+
+3.Seleziona il nome delle città e il nome dello stato in cui si trovano, insieme al nome del paese e la valuta utilizzata
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+DATASET CRIMINI A BOSTON 2015-2018:
+
+1. SELECT INCIDENT_NUMBER, OFFENSE_CODE, OFFENSE_DESCRIPTION FROM crimes LIMIT 100000;
+
+2. SELECT DAY_OF_WEEK, COUNT(*) AS num_crimes
+FROM crimes
+GROUP BY DAY_OF_WEEK
+ORDER BY num_crimes DESC;
+
+
+3.
+
+SELECT c1.INCIDENT_NUMBER AS incident1, c2.INCIDENT_NUMBER AS incident2
+FROM crimes AS c1
+JOIN crimes AS c2 ON c1.OCCURRED_ON_DATE = c2.OCCURRED_ON_DATE AND c1.DISTRICT = c2.DISTRICT
+WHERE c1.INCIDENT_NUMBER <> c2.INCIDENT_NUMBER;
+
+
+1.Seleziona il numero di incidente, il codice di reato e la descrizione del reato dalla tabella "crimes".
+
+2.Trova il numero di reati per ciascun giorno della settimana, ordinati dal più alto al più basso.
+
+3.Trova tutte le coppie di reati che sono stati commessi nella stessa data e nello stesso distretto.
